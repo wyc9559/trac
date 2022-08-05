@@ -11,7 +11,7 @@
 #' @param summary_function how to combine the errors calculated on each
 #' observation within a fold (e.g. mean or median)
 #' @export
-cv_sparse_log_contrast <- function(fit, Z, y, folds = NULL, nfolds = 5,
+cv_sparse_log_contrast2 <- function(fit, Z, y, folds = NULL, nfolds = 5,
                                    summary_function = stats::median,
                                    additional_covariates = NULL) {
   n <- nrow(Z)
@@ -69,7 +69,7 @@ cv_sparse_log_contrast <- function(fit, Z, y, folds = NULL, nfolds = 5,
     
     predicted_values <- rbind(predicted_values,
                               predict_trac(
-                                fit_folds[[i]],
+                                list(fit_folds[[i]]),
                                 Z[folds[[i]], ],
                                 additional_covariates[folds[[i]], ])[[1]])
     
