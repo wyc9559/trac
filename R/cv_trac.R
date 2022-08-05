@@ -113,7 +113,7 @@ cv_trac <- function(fit, Z, y, A, additional_covariates = NULL, folds = NULL,
     iw_1se = which.min(lapply(cv, function(cvv) cvv$m[cvv$i1se])),
     folds = folds
   )
-}
+  }
 
 #' This function creates stratified folds for cross validation for unbalanced
 #' data. The code is adopted from ggb:::make_folds
