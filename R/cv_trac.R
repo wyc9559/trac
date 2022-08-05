@@ -32,7 +32,7 @@ cv_trac <- function(fit, Z, y, A, additional_covariates = NULL, folds = NULL,
   } else {
     nfolds <- length(folds)
   }
-
+  
   cv <- list()
   fit_folds <- list() # save this to reuse by log-ratio's cv function
   for (iw in seq_along(fit)) {
@@ -47,8 +47,8 @@ cv_trac <- function(fit, Z, y, A, additional_covariates = NULL, folds = NULL,
         fit[[iw]]$w_additional_covariates <- NULL
       }
       if (is.null(fit[[iw]]$rho)) fit[[iw]]$rho <- 0
-
-
+      
+      
       # train on all but i-th fold (and use settings from fit):
       fit_folds[[i]] <- trac(Z = Z[-folds[[i]], ],
                              y = y[-folds[[i]]],
@@ -62,7 +62,7 @@ cv_trac <- function(fit, Z, y, A, additional_covariates = NULL, folds = NULL,
                              method = fit[[iw]]$method,
                              rho = fit[[iw]]$rho,
                              normalized = fit[[iw]]$normalized)
-
+      
       if (fit[[iw]]$refit) {
         fit_folds[[i]] <- refit_trac(fit_folds[[i]], Z[-folds[[i]], ],
                                      y[-folds[[i]]], A)
@@ -76,7 +76,7 @@ cv_trac <- function(fit, Z, y, A, additional_covariates = NULL, folds = NULL,
           2, summary_function
         )
       }
-
+      
       if (fit[[iw]]$method == "classif" |
           fit[[iw]]$method == "classif_huber") {
         # loss: max(0, 1 - y_hat * y)^2
@@ -86,12 +86,12 @@ cv_trac <- function(fit, Z, y, A, additional_covariates = NULL, folds = NULL,
           c(y[folds[[i]]])
         errs[, i] <- colMeans(er)
       }
-    }
-    predicted_values <- rbind(predicted_values,
-                              predict_trac(
-                                fit_folds[[i]],
-                                Z[folds[[i]], ],
-                                additional_covariates[folds[[i]], ])[[1]])
+      
+      predicted_values <- rbind(predicted_values,
+                                predict_trac(
+                                  fit_folds[[i]],
+                                  Z[folds[[i]], ],
+                                  additional_covariates[folds[[i]], ])[[1]])
     }
     m <- rowMeans(errs)
     se <- apply(errs, 1, stats::sd) / sqrt(nfolds)
@@ -113,7 +113,7 @@ cv_trac <- function(fit, Z, y, A, additional_covariates = NULL, folds = NULL,
     iw_1se = which.min(lapply(cv, function(cvv) cvv$m[cvv$i1se])),
     folds = folds
   )
-  }
+}
 
 #' This function creates stratified folds for cross validation for unbalanced
 #' data. The code is adopted from ggb:::make_folds
